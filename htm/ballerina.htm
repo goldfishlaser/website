@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<html>
+    <head>
+            <title>Music Box</title>
+            <meta charset="utf-8">
+            <link href="/css/ballerina.css" rel="stylesheet">
+            <link rel="stylesheet" href="style.css">
+            <style>
+                body { margin: 0; }
+                canvas { width: 100%; height: 100% }
+            </style>
+    </head>
+    <body>
+        <script src= '/JS/three.min.js'></script>
+        <script src="/JS/Projector.js"></script>
+		<script src="/JS/CanvasRenderer.js"></script>
+        <script>
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+    
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+    
+            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+            var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+    
+            camera.position.z = 5;
+var FLOOR = -250;
+var SCREEN_WIDTH = window.innerWidth;  
+var SCREEN_HEIGHT = window.innerHeight;   
+        // instantiate a loader
+			var loader = new THREE.JSONLoader();
+
+		// load a resource
+			loader.load(
+				// resource URL
+				function ( geometry, materials ) { createScene( geometry, materials, 90, FLOOR, 50, 105 )
+				loader.load ('http://melanieallen.nfshost.com/JS/ballerina.json', ballerina);									}
+			};
+
+        </script>
+
+
+
+  <footer><p>Music Box by Melanie Allen</p></footer>
+  </body>
+</html>

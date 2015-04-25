@@ -1,0 +1,568 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Prusa</title>
+
+<img src="images/reprap.png" alt="image of my reprap" align="top"/><br>
+		<div class="content w700 left m10l p5 greenbg">
+
+<style type="text/css">
+
+    li { list-style: none;  margin: 0; }
+    p { margin: 0; }
+    span.foldopened { color: white; font-size: xx-small;
+    border-width: 1; font-family: monospace; padding: 0em 0.25em 0em 0.25em; background: #e0e0e0;
+    VISIBILITY: visible;
+    cursor:pointer; }
+
+
+    span.foldclosed { color: #666666; font-size: xx-small;
+    border-width: 1; font-family: monospace; padding: 0em 0.25em 0em 0.25em; background: #e0e0e0;
+    VISIBILITY: hidden;
+    cursor:pointer; }
+
+    span.foldspecial { color: #666666; font-size: xx-small; border-style: none solid solid none;
+    border-color: #CCCCCC; border-width: 1; font-family: sans-serif; padding: 0em 0.1em 0em 0.1em; background: #e0e0e0;
+    cursor:pointer; }
+
+    span.l { color: red; font-weight: bold; }
+
+    a.mapnode:link {text-decoration: none; color: black; }
+    a.mapnode:visited {text-decoration: none; color: black; }
+    a.mapnode:active {text-decoration: none; color: black; }
+    a.mapnode:hover {text-decoration: none; color: black; background: #eeeee0; }
+
+</style>
+<!-- ^ Position is not set to relative / absolute here because of Mozilla -->
+</head>
+<body>
+
+<script type="text/javascript">
+   // Here we implement folding. It works fine with MSIE5.5, MSIE6.0 and
+   // Mozilla 0.9.6.
+
+   if (document.layers) {
+      //Netscape 4 specific code
+      pre = 'document.';
+      post = ''; }
+   if (document.getElementById) {
+      //Netscape 6 specific code
+      pre = 'document.getElementById("';
+      post = '").style'; }
+   if (document.all) {
+      //IE4+ specific code
+      pre = 'document.all.';
+      post = '.style'; }
+
+function layer_exists(layer) {
+   try {
+      eval(pre + layer + post);
+      return true; }
+   catch (error) {
+      return false; }}
+
+function show_layer(layer) {
+   eval(pre + layer + post).position = 'relative'; 
+   eval(pre + layer + post).visibility = 'visible'; }
+
+function hide_layer(layer) {
+   eval(pre + layer + post).visibility = 'hidden';
+   eval(pre + layer + post).position = 'absolute'; }
+
+function hide_folder(folder) {
+    hide_folding_layer(folder)
+    show_layer('show'+folder);
+
+    scrollBy(0,0); // This is a work around to make it work in Browsers (Explorer, Mozilla)
+}
+
+function show_folder(folder) {
+    // Precondition: all subfolders are folded
+
+    show_layer('hide'+folder);
+    hide_layer('show'+folder);
+    show_layer('fold'+folder);
+
+    scrollBy(0,0); // This is a work around to make it work in Browsers (Explorer, Mozilla)
+
+    var i;
+    for (i=1; layer_exists('fold'+folder+'_'+i); ++i) {
+       show_layer('show'+folder+'_'+i); }
+}
+function show_folder_completely(folder) {
+    // Precondition: all subfolders are folded
+
+    show_layer('hide'+folder);
+    hide_layer('show'+folder);
+    show_layer('fold'+folder);
+
+    scrollBy(0,0); // This is a work around to make it work in Browsers (Explorer, Mozilla)
+
+    var i;
+    for (i=1; layer_exists('fold'+folder+'_'+i); ++i) {
+       show_folder_completely(folder+'_'+i); }
+}
+
+
+
+function hide_folding_layer(folder) {
+   var i;
+   for (i=1; layer_exists('fold'+folder+'_'+i); ++i) {
+       hide_folding_layer(folder+'_'+i); }
+
+   hide_layer('hide'+folder);
+   hide_layer('show'+folder);
+   hide_layer('fold'+folder);
+
+   scrollBy(0,0); // This is a work around to make it work in Browsers (Explorer, Mozilla)
+}
+
+function fold_document() {
+   var i;
+   var folder = '1';
+   for (i=1; layer_exists('fold'+folder+'_'+i); ++i) {
+       hide_folder(folder+'_'+i); }
+}
+
+function unfold_document() {
+   var i;
+   var folder = '1';
+   for (i=1; layer_exists('fold'+folder+'_'+i); ++i) {
+       show_folder_completely(folder+'_'+i); }
+}
+
+</script>
+<SPAN class="foldspecial" onclick="fold_document()">All +</SPAN>
+<SPAN class="foldspecial" onclick="unfold_document()">All -</SPAN>
+<p>Prusa
+<ul><li><span id="show1_1" class="foldclosed" onClick="show_folder('1_1')" style="POSITION: absolute">+</span> <span id="hide1_1" class="foldopened" onClick="hide_folder('1_1')">-</span>
+Electronics
+<ul id="fold1_1" style="POSITION: relative; VISIBILITY: visible;"><li>R2C2 electronics
+
+</li>
+<li>Sanguinolulu
+
+</li>
+<li>Ultimakers v1.5.3 PCB
+
+</li>
+<li>Monotronics
+
+</li>
+<li><span id="show1_1_1" class="foldclosed" onClick="show_folder('1_1_1')" style="POSITION: absolute">+</span> <span id="hide1_1_1" class="foldopened" onClick="hide_folder('1_1_1')">-</span>
+RAMPS
+<ul id="fold1_1_1" style="POSITION: relative; VISIBILITY: visible;"><li><p><span id="show1_1_1_1" class="foldclosed" onClick="show_folder('1_1_1_1')" style="POSITION: absolute">+</span> <span id="hide1_1_1_1" class="foldopened" onClick="hide_folder('1_1_1_1')">-</span>
+A RepRap etch resist printable circuit board that fits on the Arduino MEGA and holds interchangeable stepper driver carriers and the rest of RepRap's electronics. &nbsp;Arduino MEGA based modular RepRap electronics. 
+<ul id="fold1_1_1_1" style="POSITION: relative; VISIBILITY: visible;"><li>Arduino MEGA
+
+</li>
+<li>Pololu Stepper drivers
+
+</li>
+
+</ul></li>
+</ul>
+</li>
+<li>Erik's Ultimakers v1.1 PCB
+
+</li>
+<li>Generation 6
+
+</li>
+<li>Generation 7
+
+</li>
+
+</ul>
+</li>
+<li><span id="show1_2" class="foldclosed" onClick="show_folder('1_2')" style="POSITION: absolute">+</span> <span id="hide1_2" class="foldopened" onClick="hide_folder('1_2')">-</span>
+Plastic Parts
+<ul id="fold1_2" style="POSITION: relative; VISIBILITY: visible;"><li>come in two varieties
+<ul><li><span id="show1_2_1" class="foldclosed" onClick="show_folder('1_2_1')" style="POSITION: absolute">+</span> <span id="hide1_2_1" class="foldopened" onClick="hide_folder('1_2_1')">-</span>
+PLA
+<ul id="fold1_2_1" style="POSITION: relative; VISIBILITY: visible;"><li><p>Polylactic acid has the engineering advantages of high stiffness, minimal warping, and an attractive translucent colour. It is also biodegradable and plant-derived.
+</li>
+</ul>
+</li>
+<li>ABS
+
+</li>
+
+</ul>
+</li>
+<li><span id="show1_2_2" class="foldclosed" onClick="show_folder('1_2_2')" style="POSITION: absolute">+</span> <span id="hide1_2_2" class="foldopened" onClick="hide_folder('1_2_2')">-</span>
+consist of 45 parts
+<ul id="fold1_2_2" style="POSITION: relative; VISIBILITY: visible;"><li>2 couplings
+
+</li>
+<li>3 endstop-holders
+
+</li>
+<li> 1 x-carriage
+
+</li>
+<li> 1 x-end-idler
+
+</li>
+<li>1 x-end-motor
+
+</li>
+<li>1 y-motor-bracket
+
+</li>
+<li>2 z-motor-mounts
+
+</li>
+<li>4 belt-clamps
+
+</li>
+<li>8 bar-clamps
+
+</li>
+<li>2 pulleys
+
+</li>
+<li>4 frame-vertices
+
+</li>
+<li>2 frame-vertices
+
+</li>
+<li>12 pla-bushings
+
+</li>
+
+</ul>
+</li>
+
+</ul>
+</li>
+<li>Software
+<ul><li>Arduino IDE
+
+</li>
+<li><span id="show1_3" class="foldclosed" onClick="show_folder('1_3')" style="POSITION: absolute">+</span> <span id="hide1_3" class="foldopened" onClick="hide_folder('1_3')">-</span>
+CAD Tools
+<ul id="fold1_3" style="POSITION: relative; VISIBILITY: visible;"><li>designs 3D parts for printing
+<ul><li>Blender
+
+</li>
+<li>Google Sketchup
+
+</li>
+<li>FreeCAD
+
+</li>
+<li>OpenSCAD
+
+</li>
+<li>Art of Illusion
+
+</li>
+
+</ul>
+</li>
+
+</ul>
+</li>
+<li><span id="show1_4" class="foldclosed" onClick="show_folder('1_4')" style="POSITION: absolute">+</span> <span id="hide1_4" class="foldopened" onClick="hide_folder('1_4')">-</span>
+CAM Tools
+<ul id="fold1_4" style="POSITION: relative; VISIBILITY: visible;"><li>translates CAD files to a machine-friendly format used by the RepRap's electronics. 
+<ul><li>RepRap
+
+</li>
+<li>RepSnapper
+
+</li>
+<li>Skeinforge
+
+</li>
+
+</ul>
+</li>
+
+</ul>
+</li>
+<li><span id="show1_5" class="foldclosed" onClick="show_folder('1_5')" style="POSITION: absolute">+</span> <span id="hide1_5" class="foldopened" onClick="hide_folder('1_5')">-</span>
+Firmware
+<ul id="fold1_5" style="POSITION: relative; VISIBILITY: visible;"><li><p>The firmware files are usually PDE files. You open these with the arduino IDE which in turn sends them to the reprap electronics via a USB cable. 
+<ul><li>FiveD
+
+</li>
+<li>Teacup
+
+</li>
+<li>Sprinter
+
+</li>
+
+</ul></li>
+</ul>
+</li>
+
+</ul>
+</li>
+<li><span id="show1_6" class="foldclosed" onClick="show_folder('1_6')" style="POSITION: absolute">+</span> <span id="hide1_6" class="foldopened" onClick="hide_folder('1_6')">-</span>
+Hardware
+<ul id="fold1_6" style="POSITION: relative; VISIBILITY: visible;"><li><span id="show1_6_1" class="foldclosed" onClick="show_folder('1_6_1')" style="POSITION: absolute">+</span> <span id="hide1_6_1" class="foldopened" onClick="hide_folder('1_6_1')">-</span>
+stepper motor
+<ul id="fold1_6_1" style="POSITION: relative; VISIBILITY: visible;"><li><p>An electric motor used in the robotics industry. Stepper motors move a known interval for each pulse of power. These pulses of power are provided by a stepper driver and is referred to as a step. As each step moves the motor a known distance it makes them handy devices for repeatable positioning. 
+</li>
+</ul>
+</li>
+<li><span id="show1_6_2" class="foldclosed" onClick="show_folder('1_6_2')" style="POSITION: absolute">+</span> <span id="hide1_6_2" class="foldopened" onClick="hide_folder('1_6_2')">-</span>
+thermoplastic extruder
+<ul id="fold1_6_2" style="POSITION: relative; VISIBILITY: visible;"><li><p><span id="show1_6_2_1" class="foldclosed" onClick="show_folder('1_6_2_1')" style="POSITION: absolute">+</span> <span id="hide1_6_2_1" class="foldopened" onClick="hide_folder('1_6_2_1')">-</span>
+Takes a filament of a polymer, forces it down a heated barrel, and then extrudes it as a melt out of a fine nozzle. The resulting thin stream is laid down in layers to form the parts that RepRap makes. The extruder should work up to a temperature of 250 degrees Celsius.
+<ul id="fold1_6_2_1" style="POSITION: relative; VISIBILITY: visible;"><li>1 PTFE Insulator
+
+</li>
+<li>1 PTFE support block
+
+</li>
+<li>1 brass nozzle
+
+</li>
+<li>1 brass heater block
+
+</li>
+
+</ul></li>
+</ul>
+</li>
+<li><span id="show1_6_3" class="foldclosed" onClick="show_folder('1_6_3')" style="POSITION: absolute">+</span> <span id="hide1_6_3" class="foldopened" onClick="hide_folder('1_6_3')">-</span>
+Vitamins
+<ul id="fold1_6_3" style="POSITION: relative; VISIBILITY: visible;"><li>83 M8 nuts
+
+</li>
+<li>93 M8 washers
+
+</li>
+<li>6 m8x30 mudguards/fender washers
+
+</li>
+<li>2 m4x20 bolts
+
+</li>
+<li>2 M4 nuts
+
+</li>
+<li>22 m3x10 bolts
+
+</li>
+<li>16 M3x25 bolts
+
+</li>
+<li>4 M3x0 bolts
+
+</li>
+<li>70 M3 washers
+
+</li>
+<li>40 M3 nuts
+
+</li>
+<li>2 M3 grub screws
+
+</li>
+<li>3 608 skateboard bearings
+
+</li>
+<li>4 ballpoint pen springs
+
+</li>
+<li>6 M8x370mm threaded rods
+
+</li>
+<li>4 M8x294mm threaded rods
+
+</li>
+<li>3 M8x440mm threaded rods
+
+</li>
+<li>1 M8x50mm threaded rod
+
+</li>
+<li>2 8mmx420mm smooth rods
+
+</li>
+<li>2 8mmx406mm smooth rods
+
+</li>
+<li>2 8mmx350mm smooth rods
+
+</li>
+<li>1 225mmx225mm print top plate
+
+</li>
+<li>1 140mmx225mm print bottom plate
+
+</li>
+<li>1 840mmx5mm t5 pitch timing belt
+
+</li>
+<li>1 900mmx5mm T5 pitch timing belt
+
+</li>
+<li>5 NEMA 17 bipolar stepper motors
+
+</li>
+<li>50 small cable binders/zipties
+
+</li>
+
+</ul>
+</li>
+<li><span id="show1_6_4" class="foldclosed" onClick="show_folder('1_6_4')" style="POSITION: absolute">+</span> <span id="hide1_6_4" class="foldopened" onClick="hide_folder('1_6_4')">-</span>
+Opto Endstops
+<ul id="fold1_6_4" style="POSITION: relative; VISIBILITY: visible;"><li>Plugs into the stepper controller boards which interpret the signals. 
+
+</li>
+
+</ul>
+</li>
+<li><span id="show1_6_5" class="foldclosed" onClick="show_folder('1_6_5')" style="POSITION: absolute">+</span> <span id="hide1_6_5" class="foldopened" onClick="hide_folder('1_6_5')">-</span>
+DC Motor
+<ul id="fold1_6_5" style="POSITION: relative; VISIBILITY: visible;"><li>Drives the extruder
+
+</li>
+
+</ul>
+</li>
+<li><span id="show1_6_6" class="foldclosed" onClick="show_folder('1_6_6')" style="POSITION: absolute">+</span> <span id="hide1_6_6" class="foldopened" onClick="hide_folder('1_6_6')">-</span>
+Heater
+<ul id="fold1_6_6" style="POSITION: relative; VISIBILITY: visible;"><li><p>heats up the heater barrel in order to extrude plastic. It is simply a wire that current is passed through.
+</li>
+</ul>
+</li>
+<li>Thermistor
+
+</li>
+
+</ul>
+</li>
+<li>RepRap Philosophy
+<ul><li><span id="show1_7" class="foldclosed" onClick="show_folder('1_7')" style="POSITION: absolute">+</span> <span id="hide1_7" class="foldopened" onClick="hide_folder('1_7')">-</span>
+Notes from Adrian Bower's Essay
+<ul id="fold1_7" style="POSITION: relative; VISIBILITY: visible;"><li><span id="show1_7_1" class="foldclosed" onClick="show_folder('1_7_1')" style="POSITION: absolute">+</span> <span id="hide1_7_1" class="foldopened" onClick="hide_folder('1_7_1')">-</span>
+What is the project?
+<ul id="fold1_7_1" style="POSITION: relative; VISIBILITY: visible;"><li><p>a project to build a replicating FDM rapid prototyper, an instance of a von Neumann Universal Constructor
+</li>
+</ul>
+</li>
+<li><span id="show1_7_2" class="foldclosed" onClick="show_folder('1_7_2')" style="POSITION: absolute">+</span> <span id="hide1_7_2" class="foldopened" onClick="hide_folder('1_7_2')">-</span>
+Introduction
+<ul id="fold1_7_2" style="POSITION: relative; VISIBILITY: visible;"><li><p>A universal constructor is a computer linked to a manufacturing robot, both having sufficient sophistication in hardware and software to be able to make a copy of themselves. von Neumann was interested in the mathematical and computational aspects of such a machine, but he gave it the name he did because he realised that, ultimately, it could manufacture anything that is physically possible. 
+</li>
+</ul>
+</li>
+<li><span id="show1_7_3" class="foldclosed" onClick="show_folder('1_7_3')" style="POSITION: absolute">+</span> <span id="hide1_7_3" class="foldopened" onClick="hide_folder('1_7_3')">-</span>
+Rapid Prototyping
+<ul id="fold1_7_3" style="POSITION: relative; VISIBILITY: visible;"><li><p>Daedalus described how one might selectively photopolymerize a vat of liquid monomer using a laser to manufacture a three-dimensional object under the direct control of a computer Wyn Kelly Swainson's patented the same idea. This was the beginning of practical additive manufacture of three-dimensional parts under computer control &#9472;&nbsp;rapid prototyping. &nbsp;
+<br>
+The single biggest, and still not completely solved, problem of traditional subtractive manufacture is the automation of collision-free tool-path planning. No such planning is required for rapid prototyping. &nbsp;
+<p>filament deposition modelling (FDM)
+<ul><li><p>For FDM one just needs a nozzle about 0.5mm in diameter, a heater, and a forced supply of polymer. When I started the project that this paper describes I decided to use FDM for those reasons.
+</li>
+</ul></li>
+</ul>
+</li>
+<li><span id="show1_7_4" class="foldclosed" onClick="show_folder('1_7_4')" style="POSITION: absolute">+</span> <span id="hide1_7_4" class="foldopened" onClick="hide_folder('1_7_4')">-</span>
+Developing the RepRap Machine
+<ul id="fold1_7_4" style="POSITION: relative; VISIBILITY: visible;"><li><span id="show1_7_4_1" class="foldclosed" onClick="show_folder('1_7_4_1')" style="POSITION: absolute">+</span> <span id="hide1_7_4_1" class="foldopened" onClick="hide_folder('1_7_4_1')">-</span>
+The Write Head
+<ul id="fold1_7_4_1" style="POSITION: relative; VISIBILITY: visible;"><li>function
+<ul><li><p>A 60 RPM geared electric motor drives a screw chamber in which a threaded rod is forced against a rod of polymer. As the thread turns, the polymer is pushed downwards to a heated nozzle and is extruded out of the bottom. 
+</li>
+</ul>
+</li>
+<li>material
+<ul><li><p>It was decided to use polycaprolactone; this is as tough as nylon at room temperature, but starts to melt around 60 degrees C.
+</li>
+</ul>
+</li>
+
+</ul>
+</li>
+<li><span id="show1_7_4_2" class="foldclosed" onClick="show_folder('1_7_4_2')" style="POSITION: absolute">+</span> <span id="hide1_7_4_2" class="foldopened" onClick="hide_folder('1_7_4_2')">-</span>
+The Cartesian Robot
+<ul id="fold1_7_4_2" style="POSITION: relative; VISIBILITY: visible;"><li><p>The robot consists of a framework of ground steel rods held together by rapid-prototyped corner pieces.
+</li>
+</ul>
+</li>
+<li><span id="show1_7_4_3" class="foldclosed" onClick="show_folder('1_7_4_3')" style="POSITION: absolute">+</span> <span id="hide1_7_4_3" class="foldopened" onClick="hide_folder('1_7_4_3')">-</span>
+The Software
+<ul id="fold1_7_4_3" style="POSITION: relative; VISIBILITY: visible;"><li><p>The RepRap researchers are using open-source software for this: Art of Illusion for mechanical design, Kicad for electronics, SDCC for a PIC C compiler and Eclipse as a Java environment. 
+<p>two categories
+<ul><li>slicing and cross-hatch-filling STL files, and sending commands to the machine
+
+</li>
+<li>C code that is programmed into the PICs
+
+</li>
+
+</ul></li>
+</ul>
+</li>
+
+</ul>
+</li>
+<li><span id="show1_7_5" class="foldclosed" onClick="show_folder('1_7_5')" style="POSITION: absolute">+</span> <span id="hide1_7_5" class="foldopened" onClick="hide_folder('1_7_5')">-</span>
+The Biomimetics of RepRap
+<ul id="fold1_7_5" style="POSITION: relative; VISIBILITY: visible;"><li><p>It can self-replicate with the symbiotic assistance of a person. Anything that can copy itself immediately and inescapably becomes subject to Darwinian selection, but RepRap has one important difference from natural organisms: in nature, mutations are random, and only a tiny fraction are improvements; but with RepRap, every mutation is a product of the analytical thought of its users. 
+</li>
+</ul>
+</li>
+<li><span id="show1_7_6" class="foldclosed" onClick="show_folder('1_7_6')" style="POSITION: absolute">+</span> <span id="hide1_7_6" class="foldopened" onClick="hide_folder('1_7_6')">-</span>
+The Economics of RepRap
+<ul id="fold1_7_6" style="POSITION: relative; VISIBILITY: visible;"><li><p>So the self-copying and evolving RepRap machine may allow the revolutionary ownership, by the proletariat, of the means of production.
+<p>A RepRap machine will have almost no value, though it has the potential to create wealth like no other technology we have. This seems a surprising and paradoxical conjunction, but it is an inevitable consequence of self-replication. First, let us examine the wealth. 
+</li>
+</ul>
+</li>
+<li><span id="show1_7_7" class="foldclosed" onClick="show_folder('1_7_7')" style="POSITION: absolute">+</span> <span id="hide1_7_7" class="foldopened" onClick="hide_folder('1_7_7')">-</span>
+References
+<ul id="fold1_7_7" style="POSITION: relative; VISIBILITY: visible;"><li><p> &nbsp;&nbsp;&nbsp;1.Chua, C.K. et al.: Rapid Prototyping: Principles and Applications, World Scientific Publishing, ISBN: 9812381171, 2003. &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+2.Damsgaard, D., Parikh, M.A., and Rao, B.: Wireless commons perils in the common good, Communications of the Association for Computing Machinery, Volume 49 , Issue 2, February 2006. &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+3.Darwin, C.: On The Origin of Species by Means of Natural Selection, or The Preservation of Favoured Races in the Struggle for Life, pub. John Murray, London, November 24, 1859. &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+4.The Food and Agriculture Organization of the United Nations at http://www.fao.org/documents/show_cdr.asp?url_file=/docrep/004/ad452e/ad452e30.htm &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+5.Jones, D. ("Daedalus"): Ariadne Column - last item, New Scientist, 3 October 1974. &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+6.Marx, K. and Engels, F.: Manifesto of the Communist Party, London, 1848. &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+7.von Neumann, J.: The Theory of Self-Reproducing Automata, ed. A. W. Burks, University of Illinois Press, 1966. &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+8.Patel, S. The Tux Phone project at http://www.surjpatel.com/ &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+9.Pesavento, U.: An Implementation of von Neumann's Self-Reproducing Machine, Artificial Life Journal, 2, 337--354, 1995. &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+10.Sells, E., and Bowyer, A.: Directly incorporating electronics into rapid prototypes, this volume. &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+11.Swainson, W.K.: Method, medium and apparatus for producing three-dimensional figure product, US Patent 4041476, 1977. &nbsp;&nbsp;&nbsp;&nbsp;
+<br>
+12.Zykov V., Mytilinaios E., Adams B., Lipson H.: Self-reproducing machines, Nature Vol. 435 No. 7038, pp. 163-164, 2005. 
+</li>
+</ul>
+</li>
+
+</ul>
+</li>
+<li><span id="show1_8" class="foldclosed" onClick="show_folder('1_8')" style="POSITION: absolute">+</span> <span id="hide1_8" class="foldopened" onClick="hide_folder('1_8')">-</span>
+GPL License
+<ul id="fold1_8" style="POSITION: relative; VISIBILITY: visible;"><li><p>When we speak of free software, we are referring to freedom, not price. Our General Public Licenses are designed to make sure that you have the freedom to distribute copies of free software (and charge for them if you wish), that you receive source code or can get it if you want it, that you can change the software or use pieces of it in new free programs, and that you know you can do these things.
+</li>
+</ul>
+</li>
+
+</ul>
+</li>
+</div>
+</ul><SCRIPT type="text/javascript">
+fold_document();
+</SCRIPT>
+</body>
+</html>
