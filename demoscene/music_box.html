@@ -1,87 +1,53 @@
+<html><head> 
+	<title>Music Box</title> 
+	<style> body { margin: 0; } canvas { width: 100%; height: 100% } </style>
+ 	</head> 
+ 		<body data-pinterest-extension-installed="cr1.37"> 
+ 		<script src="js/three.min.js"></script>
+ 		<script src="js/three.js"></script>
+ 		<script>
+		 var scene, camera, geometry, geometry2, geometry3, material, material2, material3, render;
+		 scene = new THREE.Scene(); 
+ 		 camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 ); 
+		 renderer = new THREE.WebGLRenderer(); 
+		 renderer.setSize( window.innerWidth, window.innerHeight ); 
+ 	 	 document.body.appendChild( renderer.domElement ); 
+ 	 	 
+ 	 	 
+ 		 geometry = new THREE.BoxGeometry( 350, 200, 300 ); 
+ 		 geometry2 = new THREE.BoxGeometry( 100, 260, 100 ); 
+		 geometry3 = new THREE.PlaneGeometry( 100, 200 );
+		 
+		 			
+  		 material = new THREE.MeshBasicMaterial( { color: 0xff0000} ); 		 
+ 		 material2 = new THREE.MeshBasicMaterial( { color: 0x00ff00} );
+ 		 material3 = new THREE.MeshBasicMaterial( { color: 0xffffff, side:THREE.DoubleSide} );
+ 		 
+ 		 var musicBoxBottom = new THREE.Mesh( geometry, material ); 
+		 var stand = new THREE.Mesh( geometry2, material2 ); 
+ 		 var ballerina = new THREE.Mesh( geometry3, material3);
+ 		 		 
+ 		scene.add( musicBoxBottom); 
+ 		 scene.add( stand );
+ 		 scene.add( ballerina);
+ 		 
+ 		 
+ 		musicBoxBottom.position.y = -110;
+ 		stand.position.x = -99;
+ 		stand.position.y= -125;
+ 		ballerina.position.y = 100;
+ 		ballerina.position.x= -95
+ 		
 
-<!DOCTYPE html>
-<html lang="en">
-<meta charset="UTF-8"/>
-<html>
-    <head>
-        <title>Music Box</title>
-        Music Box
-        <style>
-            body { margin: 0; }
-            canvas { width: 100%; height: 100% }
-            </style>
-        
-    </head>
-    <body>
-        <script src="js/three.js"></script>
-        <script src="js/OBJLoader.js"></script>
-        <script>
-            var scene = new THREE.Scene();
-            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-            
-            var renderer = new THREE.WebGLRenderer();
-            renderer.setSize( window.innerWidth, window.innerHeight );
-            document.body.appendChild( renderer.domElement );
-            
-            var ambient = new THREE.AmbientLight( 0x101030 );
-			scene.add( ambient );
-
-			var directionalLight = new THREE.DirectionalLight( 0xffeedd );
-			directionalLight.position.set( 0, 0, 1 );
-			scene.add( directionalLight );
-        
-            var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-            var material = new THREE.MeshBasicMaterial( { color: 0xffffff } );
-            var cube = new THREE.Mesh( geometry, material );
-            scene.add( cube );
-       
-       		var onProgress = function ( xhr ) {
-				if ( xhr.lengthComputable ) {
-					var percentComplete = xhr.loaded / xhr.total * 100;
-					console.log( Math.round(percentComplete, 2) + '% downloaded' );
-				}
-			};
-
-			var onError = function ( xhr ) {
-			};
-			var texture = THREE.ImageUtils.loadTexture('objects/btexture.png')
-			
-			var manager = new THREE.LoadingManager();
-			manager.onProgress = function ( item, loaded, total ) {
-				console.log( item, loaded, total );
-			};
-
-  			var loader = new THREE.OBJLoader( manager );
-			loader.load( 'http://threejs.org/examples/obj/male02/male02.obj', function ( object ) {
-
-					//object.traverse( function ( child ) {
-
-						//if ( child instanceof THREE.Mesh ) {
-
-							//child.material.map = texture;
-
-					//	}
-
-				//	} );
-					object.position.y = - 80;
-					object.scale.x = object.scale.y = object.scale.z = 2;
-					scene.add( object );
-
-				}, onProgress, onError );
-
-
-
-            
-            var render = function () {
-                requestAnimationFrame( render );
-                
-               cube.rotation.x += 0.1;
-               cube.rotation.y += 0.1;
-               
-                renderer.render(scene, camera);
-            };
-        
-        render();
-            </script>
-    </body>
-</html>
+ 		  		 
+ 		  camera.position.z = 600; 
+ 		  camera.position.y = 75;
+ 		  camera.position.x = 10;
+ 		 render = function () { 
+ 			requestAnimationFrame( render ); 
+		ballerina.rotation.y += .01;
+ 		renderer.render(scene, camera); }; 
+ 		render(); 
+ 		</script><canvas width="1858" height="995" style="width: 1858px; height: 995px;"></canvas> 
+		  
+ </body></html>
