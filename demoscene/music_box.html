@@ -23,9 +23,11 @@
  		<script src="js/three.min.js"></script>
  		<script src="js/three.js"></script>
  		<script src="js/OrbitControls.js"></script>
+ 		<script src="js/JSONLoader.js"></script>
  		<script src="js/buzz.js"></script>
  		<script src="js/buzz.min.js"></script>
  		<script>
+ 		var SCREEN_WIDTH, SCREEN_HEIGHT;
 		var camera, cameraControls, scene, renderer, clock; 
 		var tex, tex_latch, tex_ballerina, tex_box, tex_velvet;
 		var geo_boxTop, geoboxTop2, geo_boxBottom, geo_ballerina, geo_boxVelvet, geo_latch, geo_latch2, geo_turnkey;
@@ -38,9 +40,15 @@
 		var isTurning = false;
 		var musicOn = false;
 		var a = 0;
-		
+	
 
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
+
+
+
+	SCREEN_WIDTH = window.innerWidth;
+	SCREEN_HEIGHT = window.innerHeight;
+
+	renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.shadowMapType = THREE.BasicShadowMap;
     renderer.setSize(window.innerWidth, window.innerHeight);
     
@@ -50,8 +58,8 @@
     mouse = new THREE.Vector2();
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.z = 600;
-    camera.position.y = 200;
+    camera.position.z = 500;
+    camera.position.y = -100;
     scene.add(camera);
     
     clock = new THREE.Clock();
@@ -61,7 +69,11 @@
     
     scene.add( new THREE.AmbientLight(0x222222) );
     
-    var music = new buzz.sound("music.ogg");
+    var music = new buzz.sound("music.ogg"); //internet archive
+    
+    var widthBox = 300;
+    var heightBox = 500;
+    var depthBox = 200;
     
     geo_boxBottom = new THREE.BoxGeometry(500, 200, 200);
     geo_stand = new THREE.BoxGeometry(75, 10, 75);
@@ -74,17 +86,19 @@
     geo_turnkey = new THREE.CylinderGeometry(5,5,40);  //radiustop, radiusbottom, height, radiussegment, heightsegment
     
     img_ballerina = new Image();
-    tex_ballerina = new THREE.Texture(img_ballerina); 
+    tex_ballerina = new THREE.Texture( img_ballerina ); 
     img_ballerina.onload = function() {
         tex_ballerina.needsUpdate = true;
         tex_ballerina.format = THREE.RGBAFormat;
-      //  makeParticle();
+        makeParticle();
 
-    };
+   };
     img_ballerina.src = "ballerina.png";
     
+    
+    
     img_jewel = new Image();
-    tex_box= new THREE.Texture(img_jewel);
+    tex_box= new THREE.Texture( img_jewel );
     img_jewel.onload = function() {
         tex_box.needsUpdate= true;
       //  makeParticle();
@@ -92,7 +106,7 @@
    img_jewel.src= "jewel.jpg";
    
     img_velvet = new Image();
-    tex_velvet = new THREE.Texture(img_velvet);
+    tex_velvet = new THREE.Texture( img_velvet );
     img_velvet.onload = function() {
         tex_velvet.needsUpdate= true;
       //  makeParticle();
@@ -100,7 +114,7 @@
    img_velvet.src= "redvelvet.jpeg";
    
     img_latch = new Image();
-    tex_latch = new THREE.Texture(img_latch);
+    tex_latch = new THREE.Texture( img_latch );
     img_latch.onload = function() {
         tex_latch.needsUpdate= true;
       //  makeParticle();
@@ -108,7 +122,7 @@
    img_latch.src= "latch.png";
     
     img_latch2 = new Image();
-    tex_latch2 = new THREE.Texture(img_latch2);
+    tex_latch2 = new THREE.Texture( img_latch2 );
     img_latch2.onload = function() {
         tex_latch2.needsUpdate= true;
       //  makeParticle();
@@ -120,91 +134,93 @@
     mat_velvet = new THREE.MeshBasicMaterial( { map: tex_velvet } );
     mat_latch = new THREE.MeshBasicMaterial( { map:tex_latch, transparent: true });
     mat_latch2 = new THREE.MeshBasicMaterial( { map:tex_latch2, transparent: true });
-    mat_turnkey = new THREE.MeshBasicMaterial({color:0xfbae34})
+    mat_turnkey = new THREE.MeshBasicMaterial({ color:0xfbae34 })
     
-    boxTop2 = new THREE.Mesh(geo_boxTop2, mat_box);
+	 boxTop2 = new THREE.Mesh(geo_boxTop2, mat_box);
     boxTop2.position.y = 25;
     boxTop2.position.z = 100;
-    scene.add(boxTop2);
+    scene.add( boxTop2 );
 
     boxBottom = new THREE.Mesh(geo_boxBottom, mat_box);
-    scene.add(boxBottom);
+    scene.add( boxBottom );
     
     turnkey1 = new THREE.Mesh(geo_turnkey, mat_turnkey);
     turnkey1.rotation.x = -90 * Math.PI/180;
-    //scene.add(turnkey1);
+    //scene.add( turnkey1 );
     
     turnkey2 = new THREE.Mesh(geo_turnkey, mat_turnkey);
-    //scene.add(turnkey2);
+    //scene.add( turnkey2 );
     
     var turnkey = new THREE.Object3D();
-    turnkey.add(turnkey1);
-    turnkey.add(turnkey2);
-    scene.add(turnkey);
+    turnkey.add( turnkey1 );
+    turnkey.add( turnkey2 );
+    scene.add( turnkey );
     turnkey.position.z = -120;
     
-    stand = new THREE.Mesh(geo_stand, mat_velvet);
+    stand = new THREE.Mesh( geo_stand, mat_velvet );
     mat_velvet.side = THREE.FrontSide;
     mat_velvet.blending = THREE.AdditiveBlending;
     mat_velvet.colors = THREE.NoColors;
-    scene.add(stand);
+    scene.add( stand );
     stand.position.y = 110;
     stand.position.x = -165;
     
     ballerina= new THREE.Mesh(geo_ballerina, mat_ballerina);
-    mat_ballerina.side = THREE.FrontSide;
-    //scene.add(ballerina); 
+    mat_ballerina.side = THREE.BackSide;
+    //scene.add( ballerina ); 
     ballerina.position.z= 50
     
     moveballerina = new THREE.Object3D();
-    moveballerina.add(ballerina);
+    moveballerina.add( ballerina );
     moveballerina.position.x = stand.position.x;
     moveballerina.position.y = stand.position.y;
-    scene.add(moveballerina);
+    scene.add( moveballerina );
    
-	velvet = new THREE.Mesh(geo_boxTop, mat_velvet);
-    //scene.add(velvet);
+	velvet = new THREE.Mesh( geo_boxTop, mat_velvet );
+    //scene.add( velvet );
     velvet.position.y = 100;    
 
-	velvet2 = new THREE.Mesh(geo_boxVelvet, mat_velvet);
+	velvet2 = new THREE.Mesh( geo_boxVelvet, mat_velvet );
     //scene.add(velvet2);
    // velvet2.position.y = 110;
    velvet2.position.z=99;
     
    var openvelvet2 = new THREE.Object3D();
-   openvelvet2.add(velvet2);
-   openvelvet2.add(boxTop2);
+   openvelvet2.add( velvet2 );
+   openvelvet2.add( boxTop2 );
     
     var movevelvet2 = new THREE.Object3D();
-	movevelvet2.add(openvelvet2);
+	movevelvet2.add( openvelvet2 );
 	movevelvet2.position.y=110;
 	movevelvet2.position.z=-100;
 	
-	scene.add(movevelvet2);
-	scene.add(velvet);
+	scene.add( movevelvet2 );
+	scene.add( velvet );
 	
 	var tiltDirection = -1;
 	var ballerinaTilt = -tiltDirection;
 	
-    latch = new THREE.Mesh(geo_latch, mat_latch);
-    scene.add(latch);
+    latch = new THREE.Mesh( geo_latch, mat_latch );
+    scene.add( latch );
     latch.position.y = 80;
     latch.position.z = 105;
     latch.position.x = -5;
       
-    latch2 = new THREE.Mesh(geo_latch2, mat_latch2);
-    //scene.add(latch2);
+    latch2 = new THREE.Mesh( geo_latch2, mat_latch2) ;
+    //scene.add( latch2 );
     //latch2.position.y = 90;
     //latch2.position.z = 105;
     latch2.position.z = 215;
 
     var movelatch2 = new THREE.Object3D();
-    movelatch2.add(latch2);
+    movelatch2.add( latch2 );
     movelatch2.position.y = 100;
     movelatch2.position.z = -100;
     scene.add(movelatch2);
      
     document.body.appendChild(renderer.domElement);
+
+
 
 function open() {
 openvelvet2.rotation.x += tiltDirection * 0.5 * Math.PI/180;
@@ -212,11 +228,11 @@ openvelvet2.rotation.x += tiltDirection * 0.5 * Math.PI/180;
 		tiltDirection = -1;
 		openvelvet2.rotation.x = 2*(2 * Math.PI/180) - openvelvet2.rotation.x;
 		//isOpening = true;
-	} else if (openvelvet2.rotation.x < -95 * Math.PI/180) {isOpen = true; isOpening = false;};
+	} else if ( openvelvet2.rotation.x < -95 * Math.PI/180) { isOpen = true; isOpening = false;};
 moveballerina.rotation.x += tiltDirection * 0.5 * Math.PI/180;
 	if ( moveballerina.rotation.x > 2 * Math.PI/180 ) {
 		tiltDirection = -1;
-		moveballerina.rotation.x = 2*(2 * Math.PI/180) - moveballerina.rotation.x;
+		moveballerina.rotation.x = 2 * (2 * Math.PI/180) - moveballerina.rotation.x;
 		//isOpening = true;
 	} else if (openvelvet2.rotation.x < -95 * Math.PI/180) {isOpen = true; isOpening =false;};
 movelatch2.rotation.x += tiltDirection * 0.5 * Math.PI/180;
@@ -231,15 +247,15 @@ function close() {
 openvelvet2.rotation.x += tiltDirection * 0.5 * Math.PI/180;
 if ( openvelvet2.rotation.x < -95 * Math.PI/180 ) {
 		tiltDirection = 1;
-		openvelvet2.rotation.x = 2*(-95 * Math.PI/180) - openvelvet2.rotation.x;
+		openvelvet2.rotation.x = 2*( -95 * Math.PI/180 ) - openvelvet2.rotation.x;
 		//isClosing = true;
 	} else if( openvelvet2.rotation.x > 2 * Math.PI/180 ){isOpen = false; isClosing = false;}
 moveballerina.rotation.x += tiltDirection * 0.5 * Math.PI/180;		
 if ( moveballerina.rotation.x < -95 * Math.PI/180 ) {
 		tiltDirection = 1;
-		moveballerina.rotation.x = 2*(-95 * Math.PI/180) - moveballerina.rotation.x;
+		moveballerina.rotation.x = 2 * ( -95 * Math.PI/180 ) - moveballerina.rotation.x;
 		//isClosing = true;
-	} else if ( openvelvet2.rotation.x > 2 * Math.PI/180 ){isOpen = false; isClosing = false;}
+	} else if ( openvelvet2.rotation.x > 2 * Math.PI/180 ){ isOpen = false; isClosing = false;}
 movelatch2.rotation.x += tiltDirection * 0.5 * Math.PI/180;
 if ( movelatch2.rotation.x < -95 * Math.PI/180 ) {
 		tiltDirection = 1;
@@ -249,8 +265,13 @@ if ( movelatch2.rotation.x < -95 * Math.PI/180 ) {
 };
 
 function turn(){
-if ( isTurning = true) {turnkey.rotation.z += .8; isTurning = false;
-if ( turnkey.rotation.z < 1) { isTurning = true;} else { isTurning = false;}}
+if ( isTurning = true) { 
+	turnkey.rotation.z += .8; isTurning = false;
+if ( turnkey.rotation.z < 1) { 
+	isTurning = true;} 
+else { 
+		isTurning = false;}
+	}
 };
 
 	window.addEventListener( 'mousedown', onDocumentMouseDown, false);
@@ -268,8 +289,11 @@ if ( turnkey.rotation.z < 1) { isTurning = true;} else { isTurning = false;}}
 			isTurning = true;
 			console.log("wind up");
 			a += 1;
-			if (a > 5) {musicOn = true; console.log("music on");};
+			if (a > 5) {
+			musicOn = true; console.log("music on");
+			};
 			}	
+			
 		else if (intersectslatch.length> 0) {
 			var intersect = intersectslatch[0];
 			console.log("open latch"); 
@@ -287,7 +311,7 @@ if ( turnkey.rotation.z < 1) { isTurning = true;} else { isTurning = false;}}
 	window.addEventListener( 'resize', onWindowResize, false );
 
 function onWindowResize(){
-  	 camera.aspect = window.innerWidth / window.innerHeight;
+  	 camera.aspect = SCREEN_WIDTH/ SCREEN_HEIGHT;
   	 camera.updateProjectionMatrix();
  	 renderer.setSize( window.innerWidth, window.innerHeight );
 	}
@@ -296,10 +320,12 @@ function animate() {
 
     window.requestAnimationFrame(animate);
     
-    if (isTurning) {turn(); ballerina.rotation.z += .5;}
+    if (isTurning) {turn(); moveballerina.rotation.z += .5;}
     if (isOpening) {open();}
    if (isClosing) {close();}
-   if (isOpen && musicOn) {ballerina.rotation.z +=.08; turnkey.rotation.z += .08; music.play();}
+   if (isOpen && musicOn) { 
+   moveballerina.rotation.z +=.08; turnkey.rotation.z += .08; music.play();
+   }
     render();
 }
 
