@@ -1,0 +1,278 @@
+
+	<title>Music Box</title> 
+	<style> body { margin: 0; } canvas { width: 100%; height: 100% } </style>
+ 	</head> 
+ 		<body> 
+ <audio controls autoplay>
+  <source src= "music.mp3" type="audio/mpeg">
+  Your browser does not support the audio tag.
+</audio>
+ 		<script src="js/three.min.js"></script>
+ 		<script src="js/three.js"></script>
+ 		<script src="js/OrbitControls.js"></script>
+ 		<script>
+		var camera, cameraControls, scene, renderer, clock; 
+		var tex, tex_latch, tex_ballerina, tex_box, tex_velvet;
+		var geo_boxTop, geoboxTop2, geo_boxBottom, geo_ballerina, geo_boxVelvet, geo_latch, geo_latch2, geo_turnkey;
+		var mat_velvet, mat_ballerina, mat_box, mat_turnkey;
+		var ballerina, velvet, velvet2, latch, latch2, boxTop, boxBottom, boxTop2, turnkey1, turnkey2;
+		var raycaster = new THREE.Raycaster();
+    	var mouse = new THREE.Vector2();
+    	
+    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    renderer.shadowMapType = THREE.BasicShadowMap;
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    
+    scene = new THREE.Scene();
+
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 10000);
+    camera.position.z = 600;
+    camera.position.y = 200;
+    scene.add(camera);
+       
+    clock = new THREE.Clock();
+    
+    cameraControls = new THREE.OrbitControls(camera, renderer.domElement);
+    cameraControls.target.set(0,310,0);
+    
+    scene.add( new THREE.AmbientLight(0x222222) );
+	
+				
+    geo_boxBottom = new THREE.BoxGeometry(500, 200, 200);
+    geo_stand = new THREE.BoxGeometry(75, 10, 75);
+    geo_ballerina = new THREE.BoxGeometry(75, 2, 100);
+    geo_boxVelvet = new THREE.BoxGeometry(500, 10, 200);
+    geo_boxTop = new THREE.BoxGeometry(500, 10, 200);
+    geo_boxTop2 = new THREE.BoxGeometry(500, 50, 200);
+    geo_latch = new THREE.PlaneBufferGeometry(100,100);
+    geo_latch2 = new THREE.PlaneBufferGeometry(100,100);
+    geo_turnkey = new THREE.CylinderGeometry(5,5,25);  //radiustop, radiusbottom, height, radiussegment, heightsegment
+    
+    img_ballerina = new Image();
+    tex_ballerina = new THREE.Texture(img_ballerina); 
+    img_ballerina.onload = function() {
+        tex_ballerina.needsUpdate = true;
+        tex_ballerina.format = THREE.RGBAFormat;
+      //  makeParticle();
+
+    };
+    img_ballerina.src = "ballerina.png";
+    
+    img_jewel = new Image();
+    tex_box= new THREE.Texture(img_jewel);
+    img_jewel.onload = function() {
+        tex_box.needsUpdate= true;
+      //  makeParticle();
+    };
+   img_jewel.src= "jewel.jpg";
+   
+    img_velvet = new Image();
+    tex_velvet = new THREE.Texture(img_velvet);
+    img_velvet.onload = function() {
+        tex_velvet.needsUpdate= true;
+      //  makeParticle();
+    };
+   img_velvet.src= "redvelvet.jpeg";
+   
+    img_latch = new Image();
+    tex_latch = new THREE.Texture(img_latch);
+    img_latch.onload = function() {
+        tex_latch.needsUpdate= true;
+      //  makeParticle();
+    };
+   img_latch.src= "latch.png";
+    
+    img_latch2 = new Image();
+    tex_latch2 = new THREE.Texture(img_latch2);
+    img_latch2.onload = function() {
+        tex_latch2.needsUpdate= true;
+      //  makeParticle();
+    }   ;
+   img_latch2.src= "latch2.png";    
+  
+    mat_ballerina = new THREE.MeshBasicMaterial( { map: tex_ballerina, transparent: true } );
+    mat_box = new THREE.MeshBasicMaterial( { map: tex_box } );
+    mat_velvet = new THREE.MeshBasicMaterial( { map: tex_velvet } );
+    mat_latch = new THREE.MeshBasicMaterial( { map:tex_latch, transparent: true });
+    mat_latch2 = new THREE.MeshBasicMaterial( { map:tex_latch2, transparent: true });
+    mat_turnkey = new THREE.MeshBasicMaterial( {color:0xfbae34} )
+    
+    boxTop2 = new THREE.Mesh(geo_boxTop2, mat_box);
+    boxTop2.position.y = 25;
+    boxTop2.position.z = 100;
+    scene.add(boxTop2);
+
+    boxBottom = new THREE.Mesh(geo_boxBottom, mat_box);
+    scene.add(boxBottom);
+    
+    turnkey1 = new THREE.Mesh(geo_turnkey, mat_turnkey);
+    turnkey1.rotation.x = -90 * Math.PI/180;
+    //scene.add(turnkey1);
+    
+    turnkey2 = new THREE.Mesh(geo_turnkey, mat_turnkey);
+    //scene.add(turnkey2);
+    
+    var turnkey = new THREE.Object3D();
+    turnkey.add(turnkey1);
+    turnkey.add(turnkey2);
+    scene.add(turnkey);
+    turnkey.position.z = -120;
+    
+    stand = new THREE.Mesh(geo_stand, mat_velvet);
+    mat_velvet.side = THREE.FrontSide;
+    mat_velvet.blending = THREE.AdditiveBlending;
+    mat_velvet.colors = THREE.NoColors;
+    scene.add(stand)
+    stand.position.y = 110;
+    stand.position.x = -165;
+    
+    ballerina= new THREE.Mesh(geo_ballerina, mat_ballerina);
+    mat_ballerina.side = THREE.FrontSide;
+    //scene.add(ballerina); 
+    ballerina.position.z= 50
+    
+    moveballerina = new THREE.Object3D();
+    moveballerina.add(ballerina);
+    moveballerina.position.x = stand.position.x;
+    moveballerina.position.y = stand.position.y;
+    scene.add(moveballerina);
+
+     
+	velvet = new THREE.Mesh(geo_boxTop, mat_velvet);
+    //scene.add(velvet);
+    velvet.position.y = 100;    
+
+	velvet2 = new THREE.Mesh(geo_boxVelvet, mat_velvet);
+    //scene.add(velvet2);
+   // velvet2.position.y = 110;
+   velvet2.position.z=99;
+    
+   var openvelvet2 = new THREE.Object3D();
+   openvelvet2.add(velvet2);
+   openvelvet2.add(boxTop2);
+    
+    var movevelvet2 = new THREE.Object3D();
+	movevelvet2.add(openvelvet2);
+	movevelvet2.position.y=110;
+	movevelvet2.position.z=-100;
+	
+	scene.add(movevelvet2);
+	scene.add(velvet);
+	
+	var tiltDirection = -1;
+	var ballerinaTilt = -tiltDirection;
+	
+    latch = new THREE.Mesh(geo_latch, mat_latch);
+    scene.add(latch);
+    latch.position.y = 80;
+    latch.position.z = 105;
+    latch.position.x = -5;
+      
+    latch2 = new THREE.Mesh(geo_latch2, mat_latch2);
+    //scene.add(latch2);
+    //latch2.position.y = 90;
+    //latch2.position.z = 105;
+    latch2.position.z = 215;
+
+    var movelatch2 = new THREE.Object3D();
+    movelatch2.add(latch2);
+    movelatch2.position.y = 100;
+    movelatch2.position.z = -100;
+    scene.add(movelatch2);
+     
+    document.body.appendChild(renderer.domElement);
+    
+    function openlatch() {
+     };
+     
+     document.addEventListener('mousedown', onDocumentMouseDown, false);
+    
+    function onDocumentMouseDown( event ){
+		console.log("click");
+    	};
+    	
+
+
+function animate() {
+
+    window.requestAnimationFrame(animate);
+    ballerina.rotation.z += 0.08;
+    turnkey.rotation.z += 0.08;
+    render();
+
+}
+
+function render() {
+
+var time = Date.now() * 0.001;
+
+raycaster.setFromCamera( mouse, camera );
+
+var intersectslatch = raycaster.intersectObject(latch2);
+if (intersectslatch.length > 0 ){
+	var intersect = intersectslatch[ 0 ];
+	var face = intersect.face;
+	console.log("pick latch");
+}
+
+var intersectsturnkey = raycaster.intersectObject(turnkey);
+if (intersectsturnkey.length > 0 ){
+var intersect = intersectsturnkey[0];
+var face = intersect.face;
+console.log("pick turnkey");
+}
+
+	openvelvet2.rotation.x += tiltDirection * 0.5 * Math.PI/180;
+	if ( openvelvet2.rotation.x > 2 * Math.PI/180 ) {
+		tiltDirection = -1;
+		openvelvet2.rotation.x = 2*(2 * Math.PI/180) - openvelvet2.rotation.x;
+	} else if ( openvelvet2.rotation.x < -95 * Math.PI/180 ) {
+		tiltDirection = 1;
+		openvelvet2.rotation.x = 2*(-95 * Math.PI/180) - openvelvet2.rotation.x;
+	}
+	
+		moveballerina.rotation.x += tiltDirection * 0.5 * Math.PI/180;
+	if ( moveballerina.rotation.x > 2 * Math.PI/180 ) {
+		tiltDirection = -1;
+		moveballerina.rotation.x = 2*(2 * Math.PI/180) - moveballerina.rotation.x;
+	} else if ( moveballerina.rotation.x < -95 * Math.PI/180 ) {
+		tiltDirection = 1;
+		moveballerina.rotation.x = 2*(-95 * Math.PI/180) - moveballerina.rotation.x;
+	}
+	
+		movelatch2.rotation.x += tiltDirection * 0.5 * Math.PI/180;
+	if ( movelatch2.rotation.x > 2 * Math.PI/180 ) {
+		tiltDirection = -1;
+		movelatch2.rotation.x = 2*(2 * Math.PI/180) - movelatch2.rotation.x;
+	} else if ( movelatch2.rotation.x < -95 * Math.PI/180 ) {
+		tiltDirection = 1;
+		movelatch2.rotation.x = 2*(-95 * Math.PI/180) - movelatch2.rotation.x;
+	}
+	
+	window.addEventListener( 'resize', onWindowResize, false );
+
+function onWindowResize(){
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.setSize( window.innerWidth, window.innerHeight );
+
+	var delta = clock.getDelta();
+	cameraControls.update(delta);
+	
+	
+    renderer.render(scene, camera);
+	}
+
+
+
+}
+
+
+		</script> 
+		 </body> 
+ </html>
+
+
+	
