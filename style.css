@@ -1,0 +1,234 @@
+html{
+  font-size:16px;
+}
+
+body {
+    font-family: 'Rubik', sans-serif;
+    font-size: 1.25em;
+    background-color: #ffffe6;
+    color: #212121;
+padding:1.5em;
+
+}
+
+h1, h2, h3, h4, h5 {
+  margin: 0;
+  font-family: 'Rubik', sans-serif;
+  color: #212121;
+}
+
+p {
+	font-family: 'Rubik', sans-serif;
+	font-size: 1rem;
+	text-align: left;
+  color: #212121;
+}
+
+h2 {
+	font-family: 'Rubik', sans-serif;
+	font-size: 2rem;
+  font-style: italic;
+	text-align: left;
+  padding-top: 1.5em;
+  padding-bottom: 1em;
+  color: #212121;
+}
+
+ul {
+  font-family: 'Rubik', sans-serif;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+img, embed,
+object, video {
+max-width: 100%;
+}
+
+
+
+header, nav, footer, section, div {
+    box-sizing: border-box;
+}
+
+.header {
+  font-family: 'Rubik', sans-serif;
+  font-size: 1.25em;
+
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.26);
+  min-height: 56px;
+  transition: min-height 0.3s;
+
+}
+
+.header_title{
+  text-align: center;
+  font-size: 1.75em;
+}
+
+.header_subtitle{
+  text-align: center;
+  font-size: 1.25em;
+}
+
+.intro{
+width:100%;
+height:auto;
+}
+
+
+header, nav, nav a, nav_list, footer, footer_list {
+width: 100%
+}
+
+#thirds { width: 32%; height: auto; margin-right: 5px;}
+#halfs { width: 48%; height: auto; margin-right: 10px;}
+
+.image-container {
+  overflow: hidden;
+
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.content p {
+  font-family: 'Rubik', sans-serif;
+  font-size: 1rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content h1{
+  font-family: 'Rubik', sans-serif;
+  font-size: 1.75rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5em;
+}
+
+.nav {
+  font-family: 'Rubik', sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-grid;
+
+
+}
+
+.nav_list {
+  margin: 0;
+  text-align: center;
+}
+
+.nav_item {
+  box-sizing: border-box;
+  display: inline-grid;
+  text-align: center;
+  line-height: 24px;
+  text-transform: uppercase;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #616161;
+  padding: 1.5em;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+  color: #212121;
+}
+
+.nav {
+margin-left: auto;
+margin-right: auto;
+display: inline-grid;
+}
+
+div.scroll {
+  width: auto;
+height:70vh;
+  overflow: scroll;
+}
+
+
+.footer{
+  font-family: 'Rubik', sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+  position: fixed; /* Set the navbar to fixed position */
+  bottom: 0; /* Position the navbar at the bottom of the page */
+  width: 100%; /* Full width */
+
+}
+
+.footer_list {
+  padding: 1rem;
+  margin: 0;
+  text-align: center;
+}
+
+.footer_item {
+  box-sizing: border-box;
+  display: inline-block;
+  text-align: center;
+  line-height: 24px;
+  padding: 1.5em;
+  text-transform: uppercase;
+}
+
+.footer a {
+  text-decoration: none;
+  color: #616161;
+  padding: 1.125rem;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+  color: #212121;
+}
+
+
+// Extra small devices (portrait phones, less than 576px)
+// No media query since this is the default in Bootstrap
+
+// Small devices (landscape phones, 576px and up)
+@media only screen and (min-width: 576px) {
+  .nav_list {
+    margin: 0;
+    text-align: center;
+    display: inline-grid;
+  }}
+
+
+// Medium devices (tablets, 768px and up)
+@media only screen and (min-width: 768px) {
+  .nav_list {
+    margin: 0;
+    text-align: center;
+    display: inline-grid;
+  }
+ }
+
+// Large devices (desktops, 992px and up)
+@media only screen and (min-width: 992px) {
+  .nav_list {
+    margin: 0;
+    text-align: center;
+    display: inline-grid;
+  }
+
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media only screen and (min-width: 1200px) {  }
+
+//High resolution screens
+@media only screen and (min-resolution: 300dpi) {
+    /* CSS for high resolution screens */
+}
